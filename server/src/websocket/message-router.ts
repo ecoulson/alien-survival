@@ -1,6 +1,6 @@
-import { Message } from "./message";
+import { Message } from "../message";
+import { WebSocketConnection } from "./websocket-connection";
 import { WebSocketRouteHandler } from "./websocket-route-handler";
-import { WebSocketServer } from "./websocket-server";
 
 export class MessageRouter {
     private routingPath: Map<String, WebSocketRouteHandler>;
@@ -13,9 +13,9 @@ export class MessageRouter {
         this.routingPath.set(path, routeHandler);
     }
 
-    route(path: string, message: Message, server: WebSocketServer) {
+    route(path: string, message: Message, connection: WebSocketConnection) {
         if (this.routingPath.has(path)) {
-            this.routingPath.get(path)!(message, server);
+            this.routingPath.get(path)!(message, connection);
         } else {
             console.log(`No route ${path}`);
         }

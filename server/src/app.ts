@@ -1,15 +1,18 @@
 import { AppConfiguration } from "./app-configuration";
-import { MessageRouter } from "./message-router";
-import { WebSocketRouteHandler } from "./websocket-route-handler";
-import { WebSocketServer } from "./websocket-server";
+import { Game } from "./game/game";
+import { MessageRouter } from "./websocket/message-router";
+import { WebSocketRouteHandler } from "./websocket/websocket-route-handler";
+import { WebSocketServer } from "./websocket/websocket-server";
 
 export default class App {
-    private server: WebSocketServer;
-    private messageRouter: MessageRouter;
+    public readonly server: WebSocketServer;
+    public readonly messageRouter: MessageRouter;
+    public readonly game: Game;
 
     constructor(private appConfiguration: AppConfiguration) {
         this.messageRouter = new MessageRouter();
         this.server = new WebSocketServer(this.messageRouter);
+        this.game = new Game();
     }
 
     start() {

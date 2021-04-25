@@ -1,3 +1,11 @@
+import { EntityId } from "./entity-id";
+
 export class Player {
-    constructor(private name: string) {}
+    public readonly id: EntityId;
+    public readonly name: string;
+
+    constructor(name: string) {
+        this.name = name;
+        this.id = new EntityId();
+    }
 }

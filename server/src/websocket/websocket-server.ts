@@ -1,6 +1,7 @@
 import WebSocket from "ws";
-import { Message } from "./message";
+import { Message } from "../message";
 import { MessageRouter } from "./message-router";
+import { WebSocketConnection } from "./websocket-connection";
 
 export class WebSocketServer {
     private server: WebSocket.Server | null;
@@ -21,6 +22,10 @@ export class WebSocketServer {
         });
     }
 
+    route(message: Message, connection: WebSocketConnection) {
+        this.router.route(message.path, message, connection);
+    }
+
     private assertServerStarted() {
         if (!this.server) {
             throw new Error("WebSocket Server has not been initialized");
@@ -29,15 +34,9 @@ export class WebSocketServer {
 
     private handleConnection() {
         this.assertServerStarted();
-        this.server!.on("connection", (connection: WebSocket) => {
-            connection.on("message", this.handleMessage.bind(this));
-        });
-    }
-
-    private handleMessage(data: string) {
-        const message = JSON.parse(data);
-        if (this.server && message.path && message.data) {
-            this.router.route(message.path, message, this);
-        }
+        this.server!.on(
+            "connection",
+            (socket: WebSocket) => new WebSocketConnection(this, socket)
+        );
     }
 }
