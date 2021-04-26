@@ -1,5 +1,3 @@
-import { ConnectionId } from "./connection-id";
+import { Identifiable } from "../common/identifiable";
 
-export interface Connection {
-    connectionId(): ConnectionId;
-}
+export interface Connection extends Identifiable {}

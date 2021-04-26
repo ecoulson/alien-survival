@@ -1,37 +1,26 @@
-import { ConnectionManager } from "../websocket/connection-manager";
+import { Event } from "../events/event";
+import { EventEmitter } from "../events/event-emitter";
+import { EventListener } from "../events/event-listener";
+import { EventType } from "../events/event-type";
 import { GameMap } from "./game-map";
-import { Player } from "./player";
+import { PlayerManager } from "./player/player-manager";
 
 export class Game {
-    private players: Player[];
+    private playerManager: PlayerManager;
     private map: GameMap;
+    private eventEmitter: EventEmitter;
 
     constructor() {
-        this.players = [];
         this.map = new GameMap();
+        this.eventEmitter = new EventEmitter();
+        this.playerManager = new PlayerManager(this.eventEmitter);
     }
 
-    addPlayer(player: Player) {
-        this.players.push(player);
+    emit(event: Event) {
+        this.eventEmitter.emit(event);
     }
 
-    lookUpPlayer(id: string) {
-        const player = this.players.find(
-            (otherPlayer) => otherPlayer.id.value() === id
-        );
-        if (!player) {
-            throw new Error(`No player with playerId ${id}`);
-        }
-        return player;
-    }
-
-    removePlayer(id: string) {
-        const index = this.players.findIndex(
-            (otherPlayer) => otherPlayer.id.value() === id
-        );
-        if (index === -1) {
-            throw new Error(`No player with playerId ${id}`);
-        }
-        this.players.splice(index, 1);
+    on(eventType: EventType, eventListener: EventListener) {
+        this.eventEmitter.on(eventType, eventListener);
     }
 }

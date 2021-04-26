@@ -1,23 +1,26 @@
 import { Message } from "../message";
-import { WebSocketConnection } from "./websocket-connection";
-import { WebSocketRouteHandler } from "./websocket-route-handler";
+import { RouteHandler } from "./routes/route-handler";
+import { Route } from "./routes/route";
+import { Connection } from "./connection";
 
 export class MessageRouter {
-    private routingPath: Map<String, WebSocketRouteHandler>;
+    private routingPath: Map<String, RouteHandler>;
 
     constructor() {
-        this.routingPath = new Map<String, WebSocketRouteHandler>();
+        this.routingPath = new Map<String, RouteHandler>();
     }
 
-    addRoute(path: string, routeHandler: WebSocketRouteHandler) {
-        this.routingPath.set(path, routeHandler);
+    addRoute(route: Route) {
+        route.getAllRoutes().forEach((routeHandler, path) => {
+            this.routingPath.set(path, routeHandler);
+        });
     }
 
-    route(path: string, message: Message, connection: WebSocketConnection) {
+    route(path: string, message: Message, connection: Connection) {
         if (this.routingPath.has(path)) {
             this.routingPath.get(path)!(message, connection);
         } else {
-            console.log(`No route ${path}`);
+            throw new Error(`No route ${path}`);
         }
     }
 }

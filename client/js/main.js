@@ -20,12 +20,10 @@ submit.addEventListener("click", () => {
 });
 
 let socket = new WebSocket("ws://localhost:8080");
-let message;
 
 socket.onopen = function (e) {};
 
 socket.onmessage = function (event) {
-    message = event;
     console.log(JSON.parse(message.data));
     alert(`[message] Data received from server: ${event.data}`);
 };
@@ -46,4 +44,6 @@ socket.onerror = function (error) {
 
 closeBtn.addEventListener("click", () => {
     socket.close();
+    join.style.display = "block";
+    game.style.display = "none";
 });
