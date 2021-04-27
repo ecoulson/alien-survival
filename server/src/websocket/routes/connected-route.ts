@@ -1,3 +1,4 @@
+import { Point } from "../../game/domain/point";
 import { PlayerJoinedEvent } from "../../game/events/player-joined.event";
 import { Game } from "../../game/game";
 import { Player } from "../../game/player/player";
@@ -21,7 +22,12 @@ export class ConnectedRoute extends Route {
         this.game.emit(
             new PlayerJoinedEvent(
                 new Player({
-                    name: message.data.username
+                    name: message.data.username,
+                    connectionId: connection.id(),
+                    position: new Point({
+                        x: 0,
+                        y: 0
+                    })
                 }),
                 connection
             )

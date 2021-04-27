@@ -1,44 +1,61 @@
 import WebSocket from "ws";
 import { Id } from "../common/id";
 import { isNil } from "../common/util/is-nil";
+import { Validatable } from "../common/validatable";
 import { EventEmitter } from "../events/event-emitter";
+import { Message } from "../message";
 import { Connection } from "./connection";
 import { SocketDisconnectionEvent } from "./events/socket-disconnection.event";
 import { WebSocketServer } from "./websocket-server";
 
-export class WebSocketConnection implements Connection {
+export class WebSocketConnection implements Connection, Validatable {
     private connectionId: Id;
 
     constructor(
         private server: WebSocketServer,
-        socket: WebSocket,
+        private socket: WebSocket,
         private eventEmitter: EventEmitter
     ) {
-        this.validateConnection(server, socket, eventEmitter);
         this.connectionId = new Id();
         socket.on("message", this.handleMessage.bind(this));
         socket.on("close", this.handleClose.bind(this));
         socket.on("error", this.handleError.bind(this));
+        console.log(`New connection with id ${this.connectionId.value}`);
+        this.validate();
+        this.sendIdentificationMessage();
     }
 
-    private validateConnection(
-        server: WebSocketServer,
-        socket: WebSocket,
-        eventEmitter: EventEmitter
-    ) {
-        if (isNil(server)) {
+    private sendIdentificationMessage() {
+        this.socket.send(
+            JSON.stringify({
+                path: "/whoami",
+                data: this.connectionId.value
+            })
+        );
+    }
+
+    public validate() {
+        if (isNil(this.server)) {
             throw new Error("Cannot create a connection to a nil server");
         }
-        if (isNil(socket)) {
+        if (isNil(this.socket)) {
             throw new Error("Cannot create a connection for a nil connection");
         }
-        if (isNil(eventEmitter)) {
+        if (isNil(this.eventEmitter)) {
             throw new Error("Event emitter can not be nil");
         }
     }
 
     public id() {
         return this.connectionId;
+    }
+
+    public equals(otherConnection: Connection) {
+        return this.connectionId.equals(otherConnection.id());
+    }
+
+    public send(message: Message) {
+        this.socket.send(JSON.stringify(message));
     }
 
     private handleError() {
@@ -68,10 +85,8 @@ export class WebSocketConnection implements Connection {
             } else if (!message.data) {
                 throw new Error("All messages must have a data field");
             }
-        } catch {
-            throw new Error(
-                `Message from connection ${this.connectionId.value} did not contain valid json data (Contents on the following lines).\n${data}`
-            );
+        } catch (error) {
+            throw error;
         }
     }
 }

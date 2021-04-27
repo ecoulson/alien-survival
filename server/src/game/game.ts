@@ -13,7 +13,11 @@ export class Game {
     constructor() {
         this.map = new GameMap();
         this.eventEmitter = new EventEmitter();
-        this.playerManager = new PlayerManager(this.eventEmitter);
+        this.playerManager = new PlayerManager(this);
+    }
+
+    getPlayers() {
+        return this.playerManager.getPlayers();
     }
 
     emit(event: Event) {

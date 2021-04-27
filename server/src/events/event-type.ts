@@ -3,5 +3,9 @@ export enum EventType {
     SocketDisconnected = "SocketDisconnected",
 
     PlayerJoined = "PlayerJoined",
-    PlayerLeft = "PlayerLeft"
+    PlayerLeft = "PlayerLeft",
+    Broadcast = "Broadcast",
+    Response = "Response",
+    GetPlayers = "GetPlayers",
+    MovePlayer = "MovePlayer"
 }

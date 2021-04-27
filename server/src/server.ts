@@ -1,3 +1,4 @@
+import { Id } from "./common/id";
 import { EventListener } from "./events/event-listener";
 import { Message } from "./message";
 import { Connection } from "./websocket/connection";
@@ -8,4 +9,6 @@ export interface Server {
     route(message: Message, connection: Connection): void;
     onConnection(listener: EventListener): void;
     onDisconnection(listener: EventListener): void;
+    getConnections(): Connection[];
+    getConnection(connectionId: Id): Connection;
 }

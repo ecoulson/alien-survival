@@ -1,11 +1,16 @@
 import { v4 } from "uuid";
 import { Equatable } from "./equatable";
+import { Serializable } from "./serializable";
 
-export class Id implements Equatable<Id> {
+export class Id implements Equatable<Id>, Serializable {
     private id: string;
 
-    constructor() {
-        this.id = v4();
+    constructor(id?: string) {
+        if (!id) {
+            this.id = v4();
+        } else {
+            this.id = id;
+        }
     }
 
     public get value(): string {
@@ -14,5 +19,9 @@ export class Id implements Equatable<Id> {
 
     equals(otherId: Id) {
         return otherId.id === this.id;
+    }
+
+    serialize() {
+        return this.id;
     }
 }

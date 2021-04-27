@@ -1,12 +1,12 @@
 import { Equatable } from "./equatable";
 import { Id } from "./id";
 import { Identifiable } from "./identifiable";
-import { deepClone } from "./util/deep-clone";
+import { Serializable } from "./serializable";
 import { deepFreeze } from "./util/deep-freeze";
 import { Validatable } from "./validatable";
 
 export abstract class Entity<T = {}>
-    implements Equatable<Entity>, Identifiable, Validatable {
+    implements Equatable<Entity>, Identifiable, Validatable, Serializable {
     private entityId: Id;
     protected props: T;
 
@@ -15,13 +15,15 @@ export abstract class Entity<T = {}>
             throw new Error("Props of an entity can not be null or undefined");
         }
         this.entityId = new Id();
-        this.props = deepClone(props) as T;
+        this.props = props;
         this.validate();
     }
 
     id() {
         return this.entityId;
     }
+
+    abstract serialize(): void;
 
     abstract validate(): void;
 

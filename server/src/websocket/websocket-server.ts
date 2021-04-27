@@ -7,14 +7,18 @@ import { EventEmitter } from "../events/event-emitter";
 import { EventListener } from "../events/event-listener";
 import { EventType } from "../events/event-type";
 import { SocketConnectionEvent } from "./events/socket-connection.event";
+import { deepClone } from "../common/util/deep-clone";
+import { Id } from "../common/id";
 
 export class WebSocketServer implements Server {
     private server: WebSocket.Server | null;
     private eventEmitter: EventEmitter;
+    private connections: WebSocketConnection[];
 
     constructor(private router: MessageRouter) {
         this.server = null;
         this.eventEmitter = new EventEmitter();
+        this.connections = [];
     }
 
     listen(port: number) {
@@ -41,6 +45,22 @@ export class WebSocketServer implements Server {
         this.eventEmitter.on(EventType.SocketDisconnected, listener);
     }
 
+    getConnections() {
+        return deepClone(this.connections);
+    }
+
+    getConnection(connectionId: Id) {
+        const connection = this.connections.find((otherConnection) =>
+            otherConnection.id().equals(connectionId)
+        );
+        if (!connection) {
+            throw new Error(
+                `No connection with connection id ${connectionId.value}`
+            );
+        }
+        return connection;
+    }
+
     private assertServerStarted() {
         if (!this.server) {
             throw new Error("WebSocket Server has not been initialized");
@@ -56,6 +76,7 @@ export class WebSocketServer implements Server {
                 socket,
                 this.eventEmitter
             );
+            this.connections.push(connection);
             this.eventEmitter.emit(new SocketConnectionEvent(connection));
         });
     }
