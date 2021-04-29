@@ -1,12 +1,12 @@
 import { Serializable } from "../../common/serializable";
 
-interface PointProps {
+interface Vector2DProps {
     x: number;
     y: number;
 }
 
-export class Point implements Serializable {
-    constructor(private props: PointProps) {}
+export class Vector2D implements Serializable {
+    constructor(private props: Vector2DProps) {}
 
     public get x(): number {
         return this.props.x;

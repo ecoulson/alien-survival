@@ -1,8 +1,8 @@
 import { Id } from "../../common/id";
-import { Point } from "../domain/point";
+import { Transform } from "../game-objects/transform";
 
 export interface PlayerProps {
     name: string;
     connectionId: Id;
-    position: Point;
+    transform: Transform;
 }

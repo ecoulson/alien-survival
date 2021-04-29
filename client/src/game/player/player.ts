@@ -1,31 +1,36 @@
 import { Id } from "../../common/id";
 import { GameObject } from "../game-objects/game-object";
-import { Point } from "../game-objects/points";
+import { Vector2D } from "../game-objects/vector2d";
 import { Sprite } from "../game-objects/sprite";
+import { BasicGun } from "../gun/basic-gun";
 import { Scene } from "../scenes/scene";
 
 export class Player extends GameObject {
+    private gun: BasicGun;
+
     constructor(scene: Scene, sprite: Sprite, private name: string, private playerId: Id) {
         super(scene, sprite);
+        this.gun = new BasicGun(scene, this);
+        this.scene.addObjectToScene(this.gun);
     }
 
     entityId() {
         return this.playerId;
     }
 
-    getPosition(): Point {
-        return this.position;
+    moveTo(point: Vector2D) {
+        this.setPosition(point);
     }
 
-    moveTo(point: Point) {
-        this.position = point;
+    shoot() {
+        this.gun.fire();
     }
 
     serialize() {
         return {
             id: this.playerId.value,
             name: this.name,
-            position: this.transform.serialize()
+            transform: this.transform.serialize()
         };
     }
 

@@ -7,6 +7,8 @@ import { GameObject } from "../game-objects/game-object";
 export interface Scene {
     getObjectsInScene(): GameObject[];
     addObjectToScene(obj: GameObject): void;
+    removeObjectFromScene(obj: GameObject): void;
+    calculateCollisions(): void;
     render(canvas: Canvas): void;
     update(): void;
     init(): void;

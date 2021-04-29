@@ -1,5 +1,5 @@
 import { Id } from "../../common/id";
-import { Point } from "../../game/domain/point";
+import { Vector2D } from "../../game/game-objects/vector2d";
 import { PlayerMoveEvent } from "../../game/events/player-move.event";
 import { Game } from "../../game/game";
 import { Message } from "../../message";
@@ -29,7 +29,7 @@ export class PlayerRoute extends Route {
         this.game.emit(
             new PlayerMoveEvent(
                 new Id(message.data.player.id),
-                new Point(message.data.player.position)
+                new Vector2D(message.data.player.transform.position)
             )
         );
     }

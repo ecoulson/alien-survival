@@ -1,3 +1,4 @@
+import { Vector2D } from "../game-objects/vector2d";
 import { Sprite } from "../game-objects/sprite";
 
 export class EmptySprite implements Sprite {

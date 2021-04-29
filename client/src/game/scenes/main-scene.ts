@@ -5,6 +5,7 @@ import { EventType } from "../../events/event-type";
 import { Game } from "../game";
 import { GameObject } from "../game-objects/game-object";
 import { PlayerManager } from "../player/player-manager";
+import { WaveManger } from "../wave/wave-manager";
 import { Scene } from "./scene";
 
 export class MainScene implements Scene {
@@ -15,7 +16,8 @@ export class MainScene implements Scene {
     }
 
     init() {
-        this.addObjectToScene(new PlayerManager(this, this.game.mouse));
+        this.addObjectToScene(new PlayerManager(this, this.game.mouse, this.game.keyboard));
+        this.addObjectToScene(new WaveManger(this));
     }
 
     addObjectToScene(obj: GameObject) {
@@ -27,7 +29,23 @@ export class MainScene implements Scene {
     }
 
     render(canvas: Canvas) {
-        this.objects.forEach((obj) => obj.render(canvas));
+        this.objects.forEach((obj) => {
+            canvas.save();
+            obj.render(canvas);
+            canvas.restore();
+        });
+    }
+
+    calculateCollisions() {
+        
+    }
+
+    removeObjectFromScene(obj: GameObject) {
+        const index = this.objects.findIndex((other) => obj.objectId().equals(other.objectId()));
+        if (index === -1) {
+            throw new Error(`Could not remove object with id ${obj.objectId().value}`);
+        }
+        this.objects.splice(index, 1);
     }
 
     update() {

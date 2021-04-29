@@ -1,28 +1,47 @@
 import { Canvas } from "../../canvas/canvas";
 import { Id } from "../../common/id";
 import { Scene } from "../scenes/scene";
-import { Point } from "./points";
+import { Angle } from "./angle";
+import { AngleType } from "./angle-type";
+import { Vector2D } from "./vector2d";
 import { Sprite } from "./sprite";
+import { Transform } from "./transform";
 
 export abstract class GameObject {
     private gameObjectId: Id;
-    protected position: Point;
+    private transform_: Transform;
 
-    constructor(protected readonly scene: Scene, private sprite: Sprite) {
+    constructor(protected readonly scene: Scene, protected sprite: Sprite) {
         this.gameObjectId = new Id();
-        this.position = new Point(0, 0);
+        this.transform_ = new Transform(Vector2D.zero, new Angle(AngleType.Radians, 0));
     }
 
-    id(): Id {
+    objectId(): Id {
         return this.gameObjectId;
     }
 
     render(canvas: Canvas): void {
-        this.sprite.render(canvas, this.position);
+        this.sprite.render(canvas, this.transform);
     }
 
-    public get transform(): Point {
-        return this.position;
+    setPosition(position: Vector2D) {
+        this.transform.position = position;
+    }
+
+    destroy() {
+        this.scene.removeObjectFromScene(this);
+    }
+
+    getSprite() {
+        return this.sprite;
+    }
+
+    public get transform(): Transform {
+        return this.transform_;
+    }
+
+    public set transform(newTransform) {
+        this.transform_ = newTransform;
     }
 
     abstract update(): void;

@@ -8,18 +8,19 @@ import { PlayerJoinedEvent } from "../../events/player-joined.event";
 import { PlayerMovedEvent } from "../../events/player-moved.event";
 import { SerializedPlayer } from "../../messages/serialized-player";
 import { GameObject } from "../game-objects/game-object";
-import { Point } from "../game-objects/points";
+import { Vector2D } from "../game-objects/vector2d";
 import { Mouse } from "../input/mouse";
 import { Scene } from "../scenes/scene";
 import { EmptySprite } from "../sprites/empty-sprite";
-import { PlayerSprite } from "../sprites/player-sprite";
+import { PlayerSprite } from "./player-sprite";
 import { Player } from "./player";
 import { PlayerController } from "./player-controller";
+import { Keyboard } from "../input/keyboard";
 
 export class PlayerManager extends GameObject {
     private players: Player[];
 
-    constructor(scene: Scene, private mouse: Mouse) {
+    constructor(scene: Scene, private mouse: Mouse, private keyboard: Keyboard) {
         super(scene, new EmptySprite());
         this.players = [];
 
@@ -37,15 +38,14 @@ export class PlayerManager extends GameObject {
     onPlayerMoved(event: Event) {
         event.assertEventType(EventType.PlayerMoved);
         const movedEvent = event as PlayerMovedEvent;
-        console.log(movedEvent.message.data.player.connectionId);
         if (
             !this.isPlayerOnCurrentConnection(new Id(movedEvent.message.data.player.connectionId))
         ) {
             const player = this.findPlayerById(new Id(movedEvent.message.data.player.id));
             player.moveTo(
-                new Point(
-                    movedEvent.message.data.player.position.x,
-                    movedEvent.message.data.player.position.y
+                new Vector2D(
+                    movedEvent.message.data.player.transform.position.x,
+                    movedEvent.message.data.player.transform.position.y
                 )
             );
         }
@@ -64,7 +64,12 @@ export class PlayerManager extends GameObject {
         const getPlayersEvent = event as GetPlayersEvent;
         getPlayersEvent.message.data.players.forEach((serializedPlayer) => {
             const player = this.createPlayerFromSerializedData(serializedPlayer);
-            player.moveTo(new Point(serializedPlayer.position.x, serializedPlayer.position.y));
+            player.moveTo(
+                new Vector2D(
+                    serializedPlayer.transform.position.x,
+                    serializedPlayer.transform.position.y
+                )
+            );
             this.players.push(player);
             this.scene.addObjectToScene(player);
         });
@@ -77,8 +82,9 @@ export class PlayerManager extends GameObject {
         this.players.push(newPlayer);
         this.scene.addObjectToScene(newPlayer);
         if (this.isPlayerOnCurrentConnection(new Id(joinEvent.message.data.player.connectionId))) {
-            console.log("Player controller added to scene");
-            this.scene.addObjectToScene(new PlayerController(this.scene, newPlayer, this.mouse));
+            this.scene.addObjectToScene(
+                new PlayerController(this.scene, newPlayer, this.mouse, this.keyboard)
+            );
         }
     }
 

@@ -1,6 +1,5 @@
 import { Id } from "../../common/id";
 import { Event } from "../../events/event";
-import { EventEmitter } from "../../events/event-emitter";
 import { EventType } from "../../events/event-type";
 import { BroadcastEvent } from "../events/broadcast-event";
 import { PlayerJoinedEvent } from "../events/player-joined.event";

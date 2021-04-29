@@ -1,6 +1,6 @@
 import { Entity } from "../../common/entity";
 import { isEmptyString } from "../../common/util/is-empty";
-import { Point } from "../domain/point";
+import { Vector2D } from "../game-objects/vector2d";
 import { PlayerProps } from "./player.props";
 
 export class Player extends Entity<PlayerProps> {
@@ -12,12 +12,12 @@ export class Player extends Entity<PlayerProps> {
         return this.props.name;
     }
 
-    public get position(): Point {
-        return this.props.position;
+    public get position(): Vector2D {
+        return this.props.transform.position;
     }
 
-    moveTo(point: Point) {
-        this.props.position = point;
+    moveTo(point: Vector2D) {
+        this.props.transform.position = point;
     }
 
     validate() {
@@ -31,7 +31,7 @@ export class Player extends Entity<PlayerProps> {
             id: this.id().value,
             connectionId: this.props.connectionId.serialize(),
             name: this.props.name,
-            position: this.props.position.serialize()
+            transform: this.props.transform.serialize()
         };
     }
 }

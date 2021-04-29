@@ -1,12 +1,9 @@
 import { isNil } from "../common/util/isNil";
-import { Point } from "../game/game-objects/points";
-
-export interface CircleOptions {
-    x: number;
-    y: number;
-    radius: number;
-    color: string;
-}
+import { Angle } from "../game/game-objects/angle";
+import { AngleType } from "../game/game-objects/angle-type";
+import { Vector2D } from "../game/game-objects/vector2d";
+import { CircleOptions } from "./circle-options";
+import { RectangleOptions } from "./rectangle-options";
 
 export class Canvas {
     private context: CanvasRenderingContext2D;
@@ -45,12 +42,40 @@ export class Canvas {
         return this.size[1];
     }
 
-    drawCircle({ x, y, radius, color }: CircleOptions) {
+    save() {
+        this.context.save();
+    }
+
+    restore() {
+        this.context.restore();
+    }
+
+    drawCircle({ center, radius, color }: CircleOptions) {
         this.context.beginPath();
-        this.context.arc(x, y, radius, 0, 2 * Math.PI);
+        this.context.arc(center.x, center.y, radius, 0, 2 * Math.PI);
         this.context.fillStyle = color;
         this.context.fill();
         this.context.closePath();
+    }
+
+    drawRect({ point, width, height, color }: RectangleOptions) {
+        this.context.beginPath();
+        this.context.rect(point.x, point.y, width, height);
+        this.context.fillStyle = color;
+        this.context.fill();
+        this.context.closePath();
+    }
+
+    translate(point: Vector2D) {
+        this.context.translate(point.x, point.y);
+    }
+
+    rotate(angle: Angle) {
+        if (angle.type === AngleType.Degrees) {
+            this.context.rotate((angle.value * Math.PI) / 180);
+        } else {
+            this.context.rotate(angle.value);
+        }
     }
 
     clear() {
@@ -62,6 +87,6 @@ export class Canvas {
     }
 
     getPosition() {
-        return new Point(this.boundingBox.left, this.boundingBox.top);
+        return new Vector2D(this.boundingBox.left, this.boundingBox.top);
     }
 }

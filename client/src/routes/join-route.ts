@@ -7,7 +7,6 @@ import { RouteListener } from "./route-listener";
 
 export class JoinRoute extends Route {
     private whoami(message: WhoAMIMessage) {
-        console.log(message.data);
         Connection.CONNECTION_ID = new Id(message.data);
     }
 
