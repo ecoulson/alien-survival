@@ -16,11 +16,12 @@ export class PointCollider extends GameObject implements Collider {
     private pointCollisionStrategy: PointCollisionStrategy;
     private lineCollisionStrategy: PointLineCollisionStrategy;
     private boxCollisionStrategy: BoxPointCollisionStrategy;
+    private point: Vector2D;
 
-    constructor(scene: Scene, private parent: GameObject, private point: Vector2D) {
+    constructor(scene: Scene, private parent: GameObject, private offset: Vector2D) {
         super(scene);
-        this.point = point.add(parent.transform.position);
         this.scene.addObjectToScene(this);
+        this.point = offset.add(parent.transform.position);
         this.circleCollisionStrategy = new CirclePointCollisionStrategy();
         this.pointCollisionStrategy = new PointCollisionStrategy();
         this.lineCollisionStrategy = new PointLineCollisionStrategy();
@@ -29,7 +30,7 @@ export class PointCollider extends GameObject implements Collider {
 
     update() {
         this.transform.position = this.parent.transform.position;
-        this.point = this.point.subtract(this.transform.position);
+        this.point = this.transform.position.add(this.offset);
     }
 
     isCollidingWith(otherCollider: Collider): boolean {

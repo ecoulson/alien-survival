@@ -4,4 +4,6 @@ export class EmptyCollider implements Collider {
     isCollidingWith(): boolean {
         return false;
     }
+
+    destroy() {}
 }

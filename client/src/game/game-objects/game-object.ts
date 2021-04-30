@@ -16,12 +16,14 @@ export abstract class GameObject implements Collidable {
     private transform_: Transform;
     private collider: Collider;
     protected sprite: Sprite;
+    private destroyed_: boolean;
 
     constructor(protected readonly scene: Scene, sprite?: Sprite, collider?: Collider) {
         this.gameObjectId = new Id();
         this.transform_ = new Transform(Vector2D.zero, new Angle(AngleType.Radians, 0));
         this.sprite = sprite ? sprite : new EmptySprite();
         this.collider = collider ? collider : new EmptyCollider();
+        this.destroyed_ = true;
     }
 
     getCollider() {
@@ -45,7 +47,10 @@ export abstract class GameObject implements Collidable {
     }
 
     destroy() {
-        this.scene.removeObjectFromScene(this);
+        if (this.destroyed_) {
+            this.collider.destroy();
+            this.scene.removeObjectFromScene(this);
+        }
     }
 
     getSprite() {

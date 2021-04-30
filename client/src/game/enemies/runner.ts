@@ -1,5 +1,6 @@
 import { CircleCollider } from "../collisions/colliders/circle-collider";
 import { GameObject } from "../game-objects/game-object";
+import { Bullet } from "../gun/bullet";
 import { Circle } from "../math/circle";
 import { Vector2D } from "../math/vector2d";
 import { Scene } from "../scenes/scene";
@@ -10,15 +11,18 @@ export class Runner extends GameObject {
 
     constructor(scene: Scene) {
         super(scene, new RunnerSprite());
-        let x = Math.floor(Math.random() * 600) + 40;
-        let y = Math.floor(Math.random() * 600) + 40;
+        let x = Math.floor(Math.random() * 1500) + 40;
+        let y = Math.floor(Math.random() * 1000) + 40;
         this.setPosition(new Vector2D(x, y));
         this.speed = 1;
         this.setCollider(new CircleCollider(scene, this, new Circle(Vector2D.zero, 20)));
     }
 
-    onCollision() {
-        console.log("heheheh gamer moment");
+    onCollision(object: GameObject) {
+        if (object instanceof Bullet) {
+            console.log("ive been shot retard");
+            this.destroy();
+        }
     }
 
     update(): void {

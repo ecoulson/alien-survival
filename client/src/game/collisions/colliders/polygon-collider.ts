@@ -6,4 +6,6 @@ export class PolygonCollider implements Collider {
             "Not implementing polygon colliders until I have a need for them. Feel free to submit a pull request with implementation"
         );
     }
+
+    destroy() {}
 }

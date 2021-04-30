@@ -18,13 +18,15 @@ export class CircleCollider extends GameObject implements Collider {
     private circleCollisionStrategy: CircleCollisionStrategy;
     private lineCollisionStrategy: CircleLineCollisionStrategy;
     private boxCollisionStrategy: BoxCircleCollisionStrategy;
+    private offset: Vector2D;
+    private radius: number;
+    private circle: Circle;
 
-    constructor(scene: Scene, private parent: GameObject, private circle: Circle) {
+    constructor(scene: Scene, private parent: GameObject, circle: Circle) {
         super(scene, new CircleColliderSprite(circle.getRadius()));
-        this.circle = new Circle(
-            parent.transform.position.add(circle.getCenter()),
-            circle.getRadius()
-        );
+        this.offset = circle.getCenter();
+        this.radius = circle.getRadius();
+        this.circle = new Circle(parent.transform.position.add(this.offset), this.radius);
         this.scene.addObjectToScene(this);
 
         this.pointCollisionStrategy = new CirclePointCollisionStrategy();
@@ -35,10 +37,7 @@ export class CircleCollider extends GameObject implements Collider {
 
     update() {
         this.transform.position = this.parent.transform.position;
-        this.circle = new Circle(
-            this.circle.getCenter().subtract(this.transform.position),
-            this.circle.getRadius()
-        );
+        this.circle = new Circle(this.transform.position.add(this.offset), this.radius);
     }
 
     isCollidingWith(otherCollider: Collider): boolean {

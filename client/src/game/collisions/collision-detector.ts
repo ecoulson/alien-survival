@@ -8,7 +8,7 @@ export class CollisionDetector {
 
     calculateCollisions() {
         // TODO: litterally use any more efficient collision detection algo.
-        //TODO: eventually use spatial hashing to only grab collisions that need to occur
+        // TODO: eventually use spatial hashing to only grab collisions that need to occur
         const collidableObjects = this.getCollidableObjectsInScene();
         const collisions = this.detectCollisions(collidableObjects);
         this.notifyCollidedObjects(collisions);
@@ -24,8 +24,10 @@ export class CollisionDetector {
         const collisions: Collision[] = [];
         for (let i = 0; i < collidableObjects.length; i++) {
             for (let j = i + 1; j < collidableObjects.length; j++) {
-                if (this.isColliding(collidableObjects[i], collidableObjects[j])) {
-                    collisions.push(new Collision(collidableObjects[i], collidableObjects[j]));
+                if (i != j) {
+                    if (this.isColliding(collidableObjects[i], collidableObjects[j])) {
+                        collisions.push(new Collision(collidableObjects[i], collidableObjects[j]));
+                    }
                 }
             }
         }

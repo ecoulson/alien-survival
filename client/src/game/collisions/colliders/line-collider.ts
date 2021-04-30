@@ -10,18 +10,23 @@ import { BoxCollider } from "./box-collider";
 import { BoxLineCollisionStrategy } from "../strategies/box-line-collision-strategy";
 import { GameObject } from "../../game-objects/game-object";
 import { Scene } from "../../scenes/scene";
+import { Vector2D } from "../../math/vector2d";
 
 export class LineCollider extends GameObject implements Collider {
     private lineCollisionStrategy: LineCollisionStrategy;
     private pointCollisionStrategy: PointLineCollisionStrategy;
     private circleCollisionStrategy: CircleLineCollisionStrategy;
     private boxCollisionStrategy: BoxLineCollisionStrategy;
+    private originOffset: Vector2D;
+    private endOffset: Vector2D;
 
     constructor(scene: Scene, private parent: GameObject, private segment: Segment) {
         super(scene);
+        this.originOffset = segment.getOrigin();
+        this.endOffset = segment.getEnd();
         this.segment = new Segment(
-            segment.getOrigin().add(parent.transform.position),
-            segment.getEnd().add(parent.transform.position)
+            parent.transform.position.add(this.originOffset),
+            parent.transform.position.add(this.endOffset)
         );
         this.scene.addObjectToScene(this);
         this.lineCollisionStrategy = new LineCollisionStrategy();
@@ -33,8 +38,8 @@ export class LineCollider extends GameObject implements Collider {
     update() {
         this.transform.position = this.parent.transform.position;
         this.segment = new Segment(
-            this.segment.getOrigin().subtract(this.transform.position),
-            this.segment.getEnd().add(this.transform.position)
+            this.transform.position.add(this.originOffset),
+            this.transform.position.add(this.endOffset)
         );
     }
 

@@ -34,6 +34,8 @@ export class BasicGun extends GameObject {
         let now = Date.now();
         if (now > this.lastFire + this.fireRateInMiliseconds) {
             this.lastFire = now;
+            // instead of spawning bullet with a collider it should instead raycast in that directon to see if any colliders will be hit
+            
             this.scene.addObjectToScene(new Bullet(this.scene, this.transform));
         }
     }

@@ -18,9 +18,13 @@ export class BoxCollider extends GameObject implements Collider {
     private boxCollisionStrategy: BoxCollisionStrategy;
     private circleCollisionStrategy: BoxCircleCollisionStrategy;
     private lineCollisionStrategy: BoxLineCollisionStrategy;
+    private offset: Vector2D;
+    private size: Vector2D;
 
     constructor(scene: Scene, private parent: GameObject, private box: Box) {
         super(scene, new BoxColliderSprite(box.getSize()));
+        this.offset = box.getOrigin();
+        this.size = box.getSize();
 
         this.pointCollisionStrategy = new BoxPointCollisionStrategy();
         this.boxCollisionStrategy = new BoxCollisionStrategy();
@@ -31,10 +35,7 @@ export class BoxCollider extends GameObject implements Collider {
 
     update() {
         this.transform.position = this.parent.transform.position;
-        this.box = new Box(
-            this.box.getOrigin().subtract(this.transform.position),
-            this.box.getSize()
-        );
+        this.box = new Box(this.transform.position.add(this.offset), this.size);
     }
 
     getBox() {
