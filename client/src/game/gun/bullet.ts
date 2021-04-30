@@ -1,8 +1,10 @@
 import { GameObject } from "../game-objects/game-object";
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { Transform } from "../game-objects/transform";
 import { Scene } from "../scenes/scene";
 import { BulletSprite } from "./bullet-sprite";
+import { BoxCollider } from "../collisions/colliders/box-collider";
+import { Box } from "../math/box";
 
 export class Bullet extends GameObject {
     private speed: number;
@@ -14,6 +16,7 @@ export class Bullet extends GameObject {
             new Vector2D(parent.position.x, parent.position.y),
             parent.rotation
         );
+        this.setCollider(new BoxCollider(scene, this, new Box(Vector2D.zero, new Vector2D(5, 10))));
     }
 
     update(): void {

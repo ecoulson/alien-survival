@@ -1,7 +1,10 @@
 import { isNil } from "../common/util/isNil";
-import { Angle } from "../game/game-objects/angle";
-import { AngleType } from "../game/game-objects/angle-type";
-import { Vector2D } from "../game/game-objects/vector2d";
+import { Angle } from "../game/math/angle";
+import { AngleType } from "../game/math/angle-type";
+import { Box } from "../game/math/box";
+import { Circle } from "../game/math/circle";
+import { Segment } from "../game/math/segment";
+import { Vector2D } from "../game/math/vector2d";
 import { CircleOptions } from "./circle-options";
 import { RectangleOptions } from "./rectangle-options";
 
@@ -50,19 +53,64 @@ export class Canvas {
         this.context.restore();
     }
 
-    drawCircle({ center, radius, color }: CircleOptions) {
+    drawCircle(circle: Circle, color: string) {
         this.context.beginPath();
-        this.context.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+        this.context.arc(
+            circle.getCenter().x,
+            circle.getCenter().y,
+            circle.getRadius(),
+            0,
+            2 * Math.PI
+        );
         this.context.fillStyle = color;
         this.context.fill();
         this.context.closePath();
     }
 
-    drawRect({ point, width, height, color }: RectangleOptions) {
+    drawCircleOutline(circle: Circle, color: string) {
         this.context.beginPath();
-        this.context.rect(point.x, point.y, width, height);
+        this.context.arc(
+            circle.getCenter().x,
+            circle.getCenter().y,
+            circle.getRadius(),
+            0,
+            2 * Math.PI
+        );
+        this.context.strokeStyle = color;
+        this.context.lineWidth = 3;
+        this.context.stroke();
+        this.context.closePath();
+    }
+
+    drawBox(box: Box, color: string) {
+        this.context.beginPath();
+        let origin = box.getOrigin();
+        let size = box.getSize();
+        this.context.rect(origin.x, origin.y, size.x, size.y);
         this.context.fillStyle = color;
         this.context.fill();
+        this.context.closePath();
+    }
+
+    drawBoxOutline(box: Box, color: string) {
+        this.context.beginPath();
+        let origin = box.getOrigin();
+        let size = box.getSize();
+        this.context.rect(origin.x, origin.y, size.x, size.y);
+        this.context.strokeStyle = color;
+        this.context.stroke();
+        this.context.closePath();
+    }
+
+    drawSegment(segment: Segment, color: string) {
+        this.context.beginPath();
+        const origin = segment.getOrigin();
+        const end = segment.getEnd();
+        this.context.lineWidth = 3;
+        this.context.moveTo(origin.x, origin.y);
+        this.context.lineTo(end.x, end.y);
+        this.context.strokeStyle = color;
+        this.context.stroke();
         this.context.closePath();
     }
 

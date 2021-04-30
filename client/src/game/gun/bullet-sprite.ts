@@ -1,7 +1,8 @@
 import { Canvas } from "../../canvas/canvas";
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { Sprite } from "../game-objects/sprite";
 import { Transform } from "../game-objects/transform";
+import { Box } from "../math/box";
 
 export class BulletSprite implements Sprite {
     width(): number {
@@ -15,12 +16,7 @@ export class BulletSprite implements Sprite {
     render(canvas: Canvas, transform: Transform): void {
         canvas.translate(this.centerOfRotation(transform));
         canvas.rotate(transform.rotation);
-        canvas.drawRect({
-            point: Vector2D.zero,
-            width: this.width(),
-            height: this.height(),
-            color: "red"
-        });
+        canvas.drawBox(new Box(Vector2D.zero, new Vector2D(this.width(), this.height())), "red");
     }
 
     centerOfRotation(transform: Transform): Vector2D {

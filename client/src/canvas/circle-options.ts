@@ -1,4 +1,4 @@
-import { Vector2D } from "../game/game-objects/vector2d";
+import { Vector2D } from "../game/math/vector2d";
 
 export interface CircleOptions {
     center: Vector2D;

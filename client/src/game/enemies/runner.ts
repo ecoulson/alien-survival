@@ -1,5 +1,7 @@
+import { CircleCollider } from "../collisions/colliders/circle-collider";
 import { GameObject } from "../game-objects/game-object";
-import { Vector2D } from "../game-objects/vector2d";
+import { Circle } from "../math/circle";
+import { Vector2D } from "../math/vector2d";
 import { Scene } from "../scenes/scene";
 import { RunnerSprite } from "./runner-sprite";
 
@@ -12,6 +14,11 @@ export class Runner extends GameObject {
         let y = Math.floor(Math.random() * 600) + 40;
         this.setPosition(new Vector2D(x, y));
         this.speed = 1;
+        this.setCollider(new CircleCollider(scene, this, new Circle(Vector2D.zero, 20)));
+    }
+
+    onCollision() {
+        console.log("heheheh gamer moment");
     }
 
     update(): void {

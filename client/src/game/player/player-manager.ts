@@ -8,10 +8,9 @@ import { PlayerJoinedEvent } from "../../events/player-joined.event";
 import { PlayerMovedEvent } from "../../events/player-moved.event";
 import { SerializedPlayer } from "../../messages/serialized-player";
 import { GameObject } from "../game-objects/game-object";
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { Mouse } from "../input/mouse";
 import { Scene } from "../scenes/scene";
-import { EmptySprite } from "../sprites/empty-sprite";
 import { PlayerSprite } from "./player-sprite";
 import { Player } from "./player";
 import { PlayerController } from "./player-controller";
@@ -21,7 +20,7 @@ export class PlayerManager extends GameObject {
     private players: Player[];
 
     constructor(scene: Scene, private mouse: Mouse, private keyboard: Keyboard) {
-        super(scene, new EmptySprite());
+        super(scene);
         this.players = [];
 
         this.scene.on(EventType.PlayerJoined, this.playerJoined.bind(this));

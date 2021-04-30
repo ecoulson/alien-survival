@@ -1,4 +1,4 @@
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { MouseButton } from "./mouse-button";
 import { MouseListener } from "./mouse-listener";
 

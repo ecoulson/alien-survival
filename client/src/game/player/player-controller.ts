@@ -1,14 +1,13 @@
 import { PlayerMoveEvent } from "../../events/player-move.event";
-import { Angle } from "../game-objects/angle";
-import { AngleType } from "../game-objects/angle-type";
+import { Angle } from "../math/angle";
+import { AngleType } from "../math/angle-type";
 import { GameObject } from "../game-objects/game-object";
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { Key } from "../input/key";
 import { Keyboard } from "../input/keyboard";
 import { Mouse } from "../input/mouse";
 import { MouseButton } from "../input/mouse-button";
 import { Scene } from "../scenes/scene";
-import { EmptySprite } from "../sprites/empty-sprite";
 import { Player } from "./player";
 
 export class PlayerController extends GameObject {
@@ -18,7 +17,7 @@ export class PlayerController extends GameObject {
         private mouse: Mouse,
         private keyboard: Keyboard
     ) {
-        super(scene, new EmptySprite());
+        super(scene);
     }
 
     update(): void {

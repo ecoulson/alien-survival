@@ -1,5 +1,5 @@
 import { GameObject } from "../game-objects/game-object";
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { Scene } from "../scenes/scene";
 import { BasicGunSprite } from "./basic-gun-sprite";
 import { Bullet } from "./bullet";

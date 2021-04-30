@@ -1,9 +1,13 @@
 import { Id } from "../../common/id";
 import { GameObject } from "../game-objects/game-object";
-import { Vector2D } from "../game-objects/vector2d";
+import { Vector2D } from "../math/vector2d";
 import { Sprite } from "../game-objects/sprite";
 import { BasicGun } from "../gun/basic-gun";
 import { Scene } from "../scenes/scene";
+import { BoxCollider } from "../collisions/colliders/box-collider";
+import { Box } from "../math/box";
+import { CircleCollider } from "../collisions/colliders/circle-collider";
+import { Circle } from "../math/circle";
 
 export class Player extends GameObject {
     private gun: BasicGun;
@@ -12,6 +16,7 @@ export class Player extends GameObject {
         super(scene, sprite);
         this.gun = new BasicGun(scene, this);
         this.scene.addObjectToScene(this.gun);
+        this.setCollider(new CircleCollider(scene, this, new Circle(Vector2D.zero, 25)));
     }
 
     entityId() {
